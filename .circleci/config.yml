@@ -1,0 +1,64 @@
+version: 2.1
+
+orbs: 
+  gcp-gcr: circleci/gcp-gcr@0.14.1
+
+workflows:
+  commit:
+    jobs:
+      - build-and-push-tag:
+          name: build-tag
+          context:
+            - saleor-stg
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+
+      - build-and-push-latest:
+          name: build-latest
+          context:
+            - saleor-stg
+          filters:
+            tags:
+              ignore: /.*/
+            branches:
+              only: main
+
+jobs:
+  build-and-push-tag:
+    machine:
+      image: ubuntu-2004:202201-02
+      resource_class: medium
+    steps:
+      - checkout
+      - gcp-gcr/gcr-auth:
+          gcloud-service-key: GOOGLE_CREDENTIALS
+      - gcp-gcr/build-image:
+          image: github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
+          tag: ${CIRCLE_TAG:0:7}
+          no_output_timeout: 20m
+          registry-url: eu.gcr.io
+      - gcp-gcr/push-image:
+          image: github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
+          registry-url: eu.gcr.io
+          tag: ${CIRCLE_TAG:0:7}
+
+  build-and-push-latest:
+    machine:
+      image: ubuntu-2004:202201-02
+      resource_class: medium
+    steps:
+      - checkout
+      - gcp-gcr/gcr-auth:
+          gcloud-service-key: GOOGLE_CREDENTIALS
+      - gcp-gcr/build-image:
+          image: github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
+          tag: latest
+          no_output_timeout: 20m
+          registry-url: eu.gcr.io
+      - gcp-gcr/push-image:
+          image: github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
+          registry-url: eu.gcr.io
+          tag: latest
