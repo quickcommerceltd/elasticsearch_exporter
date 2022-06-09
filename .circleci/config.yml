@@ -9,7 +9,7 @@ workflows:
       - build-and-push-tag:
           name: build-tag
           context:
-            - saleor-stg
+            - ztt-dev
           filters:
             tags:
               only: /.*/
@@ -19,7 +19,7 @@ workflows:
       - build-and-push-latest:
           name: build-latest
           context:
-            - saleor-stg
+            - ztt-dev
           filters:
             tags:
               ignore: /.*/
