@@ -4,7 +4,8 @@ ENV VER=1.3.0
 
 RUN wget https://github.com/prometheus-community/elasticsearch_exporter/releases/download/v${VER}/elasticsearch_exporter-${VER}.linux-amd64.tar.gz \
     && tar xvf elasticsearch_exporter-${VER}.linux-amd64.tar.gz \
-    && cp elasticsearch_exporter-${VER}.linux-amd64/elasticsearch_exporter /usr/bin
+    && cp elasticsearch_exporter-${VER}.linux-amd64/elasticsearch_exporter /usr/bin \
+    && rm -rf elasticsearch_exporter-${VER}.linux-amd64
 
 EXPOSE 9114
 
