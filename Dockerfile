@@ -8,4 +8,4 @@ RUN wget https://github.com/prometheus-community/elasticsearch_exporter/releases
 
 EXPOSE 9114
 
-ENTRYPOINT ["elasticsearch_exporter", "--es.url", "$ES_URL", "--es.apiKey", "$ES_APIKEY"]
+ENTRYPOINT ["elasticsearch_exporter"]
